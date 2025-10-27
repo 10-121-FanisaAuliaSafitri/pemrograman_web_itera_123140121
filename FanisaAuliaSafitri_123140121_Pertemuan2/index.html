@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4a0e0e, #800000);
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ffd6d6;
+        }
+
+        .dashboard {
+            max-width: 700px;
+            background: #fff;
+            color: #333;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 30px auto;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        #date-time {
+            font-size: 1.1em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #800000;
+            font-weight: bold;
+        }
+
+        .task-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        select, input, button {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        select, input[type="time"] {
+            flex: 1;
+        }
+
+        input[type="text"] {
+            flex: 2;
+        }
+
+        button {
+            background: #800000;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #a32626;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f5f7fa;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li span {
+            flex: 1;
+        }
+
+        li button {
+            background: #ff4d4d;
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 6px;
+        }
+
+        li button:hover {
+            background: #e60000;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            margin-right: 5px;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        .day-section {
+            margin-bottom: 25px;
+        }
+
+        .day-title {
+            background: #800000;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Dashboard</h1>
+    <div class="dashboard">
+        <div id="date-time">Memuat waktu...</div>
+
+        <h2>Daftar Tugas Harian</h2>
+
+        <div class="task-input">
+            <select id="daySelect">
+                <option value="">Pilih Hari</option>
+                <option>Senin</option>
+                <option>Selasa</option>
+                <option>Rabu</option>
+                <option>Kamis</option>
+                <option>Jumat</option>
+                <option>Sabtu</option>
+                <option>Minggu</option>
+            </select>
+            <input type="text" id="taskInput" placeholder="Tambahkan tugas baru...">
+            <input type="time" id="timeInput">
+            <button id="addTaskBtn">Tambah</button>
+        </div>
+
+        <div id="taskContainer"></div>
+    </div>
+
+    <script>
+        // ===============================
+        // CLASS MANAGEMENT TUGAS
+        // ===============================
+        class TaskManager {
+            constructor() {
+                this.tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+            }
+
+            addTask(day, task, time) {
+                if (!this.tasks[day]) this.tasks[day] = [];
+                this.tasks[day].push({ task, time });
+                this.saveTasks();
+            }
+
+            editTask(day, index, newTask, newTime) {
+                this.tasks[day][index] = { task: newTask, time: newTime };
+                this.saveTasks();
+            }
+
+            deleteTask(day, index) {
+                this.tasks[day].splice(index, 1);
+                if (this.tasks[day].length === 0) delete this.tasks[day];
+                this.saveTasks();
+            }
+
+            saveTasks() {
+                localStorage.setItem('tasks', JSON.stringify(this.tasks));
+            }
+        }
+
+        const taskManager = new TaskManager();
+        const taskContainer = document.getElementById('taskContainer');
+        const daySelect = document.getElementById('daySelect');
+        const taskInput = document.getElementById('taskInput');
+        const timeInput = document.getElementById('timeInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+
+        // ===============================
+        // TEMPLATE LITERAL UNTUK RENDER
+        // ===============================
+        const renderTasks = () => {
+            taskContainer.innerHTML = '';
+            for (const day in taskManager.tasks) {
+                let taskListHTML = taskManager.tasks[day]
+                    .map((t, i) => `
+                        <li>
+                            <span>${t.task} <br><small>🕒 ${t.time}</small></span>
+                            <div>
+                                <button class="edit-btn" onclick="editTask('${day}', ${i})">Edit</button>
+                                <button onclick="deleteTask('${day}', ${i})">Hapus</button>
+                            </div>
+                        </li>
+                    `).join('');
+
+                taskContainer.innerHTML += `
+                    <div class="day-section">
+                        <div class="day-title">${day}</div>
+                        <ul>${taskListHTML}</ul>
+                    </div>
+                `;
+            }
+        };
+
+        // ===============================
+        // ARROW FUNCTIONS
+        // ===============================
+        const addTask = () => {
+            const day = daySelect.value;
+            const task = taskInput.value.trim();
+            const time = timeInput.value;
+
+            if (day && task && time) {
+                taskManager.addTask(day, task, time);
+                taskInput.value = '';
+                timeInput.value = '';
+                renderTasks();
+            } else {
+                alert('Lengkapi semua kolom!');
+            }
+        };
+
+        const deleteTask = (day, index) => {
+            taskManager.deleteTask(day, index);
+            renderTasks();
+        };
+
+        const editTask = (day, index) => {
+            const current = taskManager.tasks[day][index];
+            const newTask = prompt('Edit tugas:', current.task);
+            const newTime = prompt('Edit waktu (format HH:MM):', current.time);
+            if (newTask && newTime) {
+                taskManager.editTask(day, index, newTask, newTime);
+                renderTasks();
+            }
+        };
+
+        // ===============================
+        // FUNGSI ASINKRON UNTUK WAKTU
+        // ===============================
+        const updateTime = async () => {
+            while (true) {
+                const now = new Date();
+                const options = { weekday: 'long', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                const formatted = now.toLocaleDateString('id-ID', options);
+                document.getElementById('date-time').textContent = `📅 ${formatted}`;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        };
+
+        // ===============================
+        // EVENT LISTENER
+        // ===============================
+        addTaskBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // ===============================
+        // INISIALISASI
+        // ===============================
+        renderTasks();
+        updateTime();
+    </script>
+</body>
+</html>
