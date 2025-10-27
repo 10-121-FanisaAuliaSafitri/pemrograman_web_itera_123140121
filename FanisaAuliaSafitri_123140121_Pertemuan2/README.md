@@ -8,3 +8,6 @@ Fitur yang ada dalam aplikasi yaitu
 5. Tampilan tema maroon
 
 Halaman utama dashboard
+<img width="1921" height="930" alt="image" src="https://github.com/user-attachments/assets/bd03f733-59ea-459b-a7da-2bdf94ee000d" />
+Manajemen tugas perhari
+
