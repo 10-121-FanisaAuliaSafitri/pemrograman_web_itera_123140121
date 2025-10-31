@@ -27,6 +27,8 @@ Komentar penjelasan telah ditambahkan di seluruh basis kode, terutama di bagian 
 Pada proye ini dilengkapi dengan 5 unit test menggunakan react testing library
 
 untuk menjalankan tes yaitu dengan mengetik npm test di terminal.
+<img width="1372" height="356" alt="image" src="https://github.com/user-attachments/assets/f27d9b2a-c3d4-44ec-ac96-416c07c36c7c" />
+
 
 Fitur yang ada pada aplikasi
 1. Menambahkan buku yang ingin dibaca, dibeli atau dimiliki
