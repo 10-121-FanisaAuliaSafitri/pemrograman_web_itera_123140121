@@ -5,17 +5,10 @@ data_mahasiswa = [{"nama": "Fanisa Aulia Safitri", "NIM": "123140121", "nilai_ut
                   {"nama": "Andi", "NIM": "129876543", "nilai_uts": 45, "nilai_uas": 50, "nilai_tugas": 60}]
 
 def hitung_nilai_akhir(uts, uas, tugas):
-    """
-    Menghitung nilai akhir dengan bobot: 30% UTS + 40% UAS + 30% Tugas.
-    """
     nilai_akhir = (0.30 * uts) + (0.40 * uas) + (0.30 * tugas)
     return round(nilai_akhir, 2)
 
 def tentukan_grade(nilai_akhir):
-    """
-    Menentukan grade berdasarkan nilai akhir.
-    A: >=80, B: >=70, C: >=60, D: >=50, E: <50
-    """
     if nilai_akhir >= 80:
         return 'A'
     elif nilai_akhir >= 70:
@@ -28,20 +21,15 @@ def tentukan_grade(nilai_akhir):
         return 'E'
 
 def tampilkan_data_tabel(data):
-    """
-    Menampilkan data mahasiswa dalam format tabel.
-    """
     if not data:
         print("\n--- Data kosong. Tidak ada data untuk ditampilkan. ---")
         return
 
-    # Tentukan lebar kolom
     col_width = {
         "NIM": 10, "Nama": 20, "UTS": 5, "UAS": 5, "Tugas": 7, 
         "Nilai Akhir": 12, "Grade": 5
     }
 
-    # Header
     header = (
         f"{'NIM':<{col_width['NIM']}} | {'Nama':<{col_width['Nama']}} | "
         f"{'UTS':<{col_width['UTS']}} | {'UAS':<{col_width['UAS']}} | "
@@ -54,7 +42,6 @@ def tampilkan_data_tabel(data):
     print(f"{header}")
     print(f"{separator}")
 
-    # Isi Tabel
     for mhs in data:
         nilai_akhir = hitung_nilai_akhir(mhs['nilai_uts'], mhs['nilai_uas'], mhs['nilai_tugas'])
         grade = tentukan_grade(nilai_akhir)
@@ -70,13 +57,9 @@ def tampilkan_data_tabel(data):
     print(f"{separator}\n")
 
 def cari_nilai_ekstrem(data, tipe='tertinggi'):
-    """
-    Mencari mahasiswa dengan Nilai Akhir tertinggi atau terendah.
-    """
     if not data:
         return None
 
-    # Hitung nilai akhir untuk semua data dan simpan dalam dictionary baru
     data_dengan_nilai_akhir = []
     for mhs in data:
         nilai_akhir = hitung_nilai_akhir(mhs['nilai_uts'], mhs['nilai_uas'], mhs['nilai_tugas'])
@@ -93,23 +76,16 @@ def cari_nilai_ekstrem(data, tipe='tertinggi'):
     else:
         return None
     
-    # Tampilkan detail hasil
     print(f"Nama: {hasil['nama']} (NIM: {hasil['NIM']})")
     print(f"Nilai Akhir: {hasil['nilai_akhir']:.2f}")
     print(f"Grade: {tentukan_grade(hasil['nilai_akhir'])}\n")
     return hasil
 
-# --- Fitur Tambahan ---
-
 def input_data_baru(data_list):
-    """
-    Meminta input data mahasiswa baru dan menambahkannya ke list data.
-    """
     print("\n--- Input Data Mahasiswa Baru ---")
     nama = input("Masukkan Nama: ")
     nim = input("Masukkan NIM: ")
-    
-    # Validasi input nilai
+
     while True:
         try:
             uts = int(input("Masukkan Nilai UTS: "))
@@ -131,12 +107,9 @@ def input_data_baru(data_list):
     }
     data_list.append(mahasiswa_baru)
     print("\n[SUCCESS] Data mahasiswa baru berhasil ditambahkan!")
-    tampilkan_data_tabel([mahasiswa_baru]) # Tampilkan data yang baru diinput
+    tampilkan_data_tabel([mahasiswa_baru])
 
 def filter_mahasiswa_by_grade(data_list):
-    """
-    Memfilter dan menampilkan mahasiswa berdasarkan grade tertentu.
-    """
     grade_pilihan = input("\nMasukkan Grade yang ingin difilter (A/B/C/D/E): ").upper()
     if grade_pilihan not in ('A', 'B', 'C', 'D', 'E'):
         print("\nGrade tidak valid. Harap masukkan A, B, C, D, atau E.")
@@ -153,9 +126,6 @@ def filter_mahasiswa_by_grade(data_list):
     tampilkan_data_tabel(hasil_filter)
 
 def hitung_rata_rata_kelas(data_list):
-    """
-    Menghitung dan menampilkan rata-rata Nilai Akhir seluruh mahasiswa di kelas.
-    """
     if not data_list:
         print("\nData kosong. Tidak dapat menghitung rata-rata.")
         return
@@ -171,13 +141,8 @@ def hitung_rata_rata_kelas(data_list):
     print(f"Total Mahasiswa: {len(data_list)}")
     print(f"Rata-Rata Nilai Akhir: {rata_rata:.2f}\n")
     return rata_rata
-
-# --- Menu Utama ---
-
+  
 def tampilkan_menu():
-    """
-    Menampilkan opsi menu untuk interaksi pengguna.
-    """
     print("=" * 40)
     print("   PROGRAM PENGELOLAAN NILAI MAHASISWA")
     print("=" * 40)
@@ -191,9 +156,6 @@ def tampilkan_menu():
     print("-" * 40)
 
 def main():
-    """
-    Fungsi utama untuk menjalankan program.
-    """
     global data_mahasiswa
     
     while True:
@@ -218,7 +180,8 @@ def main():
         else:
             print("\nPilihan tidak valid. Silakan masukkan angka antara 1 sampai 7.")
             
-        input("Tekan ENTER untuk kembali ke menu...") # Untuk jeda setelah eksekusi fitur
+        input("Tekan ENTER untuk kembali ke menu...")
 
 if __name__ == "__main__":
+
     main()
