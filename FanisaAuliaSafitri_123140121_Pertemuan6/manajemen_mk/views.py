@@ -18,11 +18,10 @@ def create_matakuliah(request):
             semester=int(data['semester'])
         )
         request.dbsession.add(new_mk)
-        # Flush untuk mendapatkan ID jika diperlukan
         request.dbsession.flush() 
         return {'status': 'success', 'data': new_mk.to_dict()}
     except Exception as e:
         print(f"Error detail: {e}")
-        # Gunakan response sederhana untuk error
         request.response.status = 500
+
         return {'error': str(e)}
