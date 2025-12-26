@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 
-# Membuat Base secara manual di sini agar tidak perlu file meta.py
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 
@@ -21,4 +20,5 @@ class Matakuliah(Base):
             'nama_mk': self.nama_mk,
             'sks': self.sks,
             'semester': self.semester,
+
         }
